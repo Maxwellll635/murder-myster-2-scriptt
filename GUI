@@ -1,0 +1,102 @@
+-- LocalScript: полноэкранный лоадер + предупреждение RU/EN
+local CoreGui = game:GetService("CoreGui")
+
+-- Если уже есть - не дублируем
+if CoreGui:FindFirstChild("CustomLoadingScreen") then return end
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "CustomLoadingScreen"
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+screenGui.Parent = CoreGui
+
+-- Фон
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(1, 0, 1, 0)
+frame.Position = UDim2.new(0, 0, 0, 0)
+frame.BackgroundColor3 = Color3.new(0, 0, 0)
+frame.BorderSizePixel = 0
+frame.Parent = screenGui
+
+-- Заголовок Murder Mystery 2 (красный)
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0.16, 0)
+title.Position = UDim2.new(0, 0, 0.16, 0)
+title.BackgroundTransparency = 1
+title.Text = "Murder Mystery 2"
+title.TextColor3 = Color3.new(1, 0, 0)
+title.TextScaled = true
+title.Font = Enum.Font.Arcade
+title.Parent = frame
+
+-- Подзаголовок SCRIPT (красный, сразу под титулом)
+local subTitle = Instance.new("TextLabel")
+subTitle.Size = UDim2.new(1, 0, 0.1, 0)
+subTitle.Position = UDim2.new(0, 0, 0.28, 0)
+subTitle.BackgroundTransparency = 1
+subTitle.Text = "SCRIPT"
+subTitle.TextColor3 = Color3.new(1, 0, 0)
+subTitle.TextScaled = true
+subTitle.Font = Enum.Font.Arcade
+subTitle.Parent = frame
+
+-- Прогресс-бар (центр)
+local barBackground = Instance.new("Frame")
+barBackground.Size = UDim2.new(0.8, 0, 0.06, 0)
+barBackground.Position = UDim2.new(0.1, 0, 0.6, 0)
+barBackground.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+barBackground.BorderSizePixel = 0
+barBackground.Parent = frame
+
+local barFill = Instance.new("Frame")
+barFill.Size = UDim2.new(0, 0, 1, 0) -- 0..1 от ширины barBackground
+barFill.BackgroundColor3 = Color3.new(1, 0, 0)
+barFill.BorderSizePixel = 0
+barFill.Parent = barBackground
+
+-- Текст процентов
+local progressText = Instance.new("TextLabel")
+progressText.Size = UDim2.new(1, 0, 0.08, 0)
+progressText.Position = UDim2.new(0, 0, 0.7, 0)
+progressText.BackgroundTransparency = 1
+progressText.TextColor3 = Color3.new(1, 1, 1)
+progressText.TextScaled = true
+progressText.Font = Enum.Font.Gotham
+progressText.Parent = frame
+
+-- Маленькое предупреждение внизу (RU + EN)
+local warn = Instance.new("TextLabel")
+warn.Size = UDim2.new(0.96, 0, 0, 36)
+warn.Position = UDim2.new(0.02, 0, 0.98, 0)
+warn.AnchorPoint = Vector2.new(0, 1)
+warn.BackgroundTransparency = 1
+warn.Text = "Если тебя кикнет, то этот скрипт не работает на твоем инжекторе.\nIf you get kicked, this script doesn't work with your injector."
+warn.TextColor3 = Color3.new(1, 1, 1)
+warn.TextTransparency = 0.15
+warn.TextWrapped = true
+warn.TextScaled = false
+warn.TextSize = 14
+warn.Font = Enum.Font.Gotham
+warn.Parent = frame
+
+-- Прогресс с плавной анимацией: +1% каждые 2 сек
+local progress = 0
+while progress < 100 do
+    progress += 1
+    progressText.Text = progress .. "%"
+
+    -- плавно к следующему значению за 2 сек
+    local startWidth = barFill.Size.X.Scale
+    local targetWidth = progress / 100
+    local duration = 2
+    local steps = 40
+    local stepTime = duration / steps
+
+    for i = 1, steps do
+        local alpha = i / steps
+        barFill.Size = UDim2.new(startWidth + (targetWidth - startWidth) * alpha, 0, 1, 0)
+        task.wait(stepTime)
+    end
+end
+
+-- Экран намеренно НЕ скрываем после 100%
